@@ -4,21 +4,23 @@ import (
 	"fmt"
 	"go-desktop-app/activity"
 	"go-desktop-app/sidebar"
-	"image/color"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
-	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/widget"
 )
 
 func main() {
 	a := app.New()
+
+	// a.Settings().SetTheme(theme.DarkTheme())
+
 	w := a.NewWindow("Hello World")
 	w.Resize(fyne.NewSize(600, 400))
 
-	appTitle := canvas.NewText("Golang Utilities", color.White)
+	appTitle := widget.NewLabel("Golang Utilities")
 
 	sidePanel := sidebar.NewSidebar("Activities", []sidebar.Element{
 		{

@@ -24,17 +24,29 @@ func (a *TransformTextActivity) GetContent() *fyne.Container {
 	textArea.PlaceHolder = "type something in here"
 	textArea.SetMinRowsVisible(10)
 
-	output := container.NewVScroll(transformedText)
+	output := container.NewScroll(transformedText)
 	output.SetMinSize(fyne.NewSize(300, 200))
 
 	return container.New(
 		layout.NewPaddedLayout(),
 		container.New(
-			layout.NewFormLayout(),
-			widget.NewLabel("Input text"),
-			textArea,
-			widget.NewLabel("Output text"),
-			output,
+			layout.NewVBoxLayout(),
+			newRow(
+				widget.NewLabel("Input text"),
+				container.NewHScroll(textArea),
+			),
+			newRow(
+				widget.NewLabel("Output text"),
+				output,
+			),
 		),
+	)
+}
+
+func newRow(left fyne.CanvasObject, right fyne.CanvasObject) *fyne.Container {
+	return container.New(
+		layout.NewBorderLayout(nil, nil, left, nil),
+		left,
+		right,
 	)
 }

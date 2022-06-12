@@ -1,10 +1,7 @@
 package sidebar
 
 import (
-	"image/color"
-
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
@@ -26,7 +23,10 @@ func NewSidebar(title string, items []Element) *Sidebar {
 }
 
 func (sidebar *Sidebar) GetContent() *fyne.Container {
-	sidebarTitle := container.New(layout.NewCenterLayout(), canvas.NewText(sidebar.Title, color.White))
+	sidebarTitle := container.New(
+		layout.NewCenterLayout(),
+		widget.NewLabel(sidebar.Title),
+	)
 	list := sidebar.generateList()
 
 	return container.New(layout.NewBorderLayout(sidebarTitle, nil, nil, nil),
