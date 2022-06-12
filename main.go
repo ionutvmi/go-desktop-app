@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"go-desktop-app/activity"
 	"go-desktop-app/sidebar"
 	"image/color"
 
@@ -19,7 +20,7 @@ func main() {
 
 	appTitle := canvas.NewText("Golang Utilities", color.White)
 
-	sidePanel := sidebar.NewSidebar("Actions", []sidebar.Element{
+	sidePanel := sidebar.NewSidebar("Activities", []sidebar.Element{
 		{
 			Id:    "transform-text",
 			Label: "Transform text",
@@ -42,23 +43,18 @@ func main() {
 
 	sidePanel.OnSelected = func(item sidebar.Element) {
 		fmt.Println("selected ", item.Id)
-		mainContent := canvas.NewText(
-			"Main content here"+item.Label,
-			color.White,
-		)
 
+		newAction := activity.New(item.Id)
 		mainPanel.Objects = []fyne.CanvasObject{
-			container.New(layout.NewVBoxLayout(), mainContent),
+			newAction.GetContent(),
 		}
 	}
 
 	var top fyne.CanvasObject = container.New(layout.NewCenterLayout(), appTitle)
-	var right fyne.CanvasObject = nil
-	var bottom fyne.CanvasObject = nil
 	var left fyne.CanvasObject = sidePanel.GetContent()
 
 	appContent := container.New(
-		layout.NewBorderLayout(top, bottom, left, right),
+		layout.NewBorderLayout(top, nil, left, nil),
 		top, left,
 		mainPanel,
 	)
