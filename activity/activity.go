@@ -26,5 +26,10 @@ func (a *DefaultActivity) GetContent() *fyne.Container {
 }
 
 func New(id string) Activity {
+
+	if id == "transform-text" {
+		return &TransformTextActivity{id}
+	}
+
 	return &DefaultActivity{id}
 }
