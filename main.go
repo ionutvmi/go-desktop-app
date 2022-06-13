@@ -8,7 +8,6 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -41,7 +40,7 @@ func main() {
 		},
 	})
 
-	mainPanel := container.NewWithoutLayout()
+	mainPanel := container.NewMax()
 
 	sidePanel.OnSelected = func(item sidebar.Element) {
 		fmt.Println("selected ", item.Id)
@@ -52,12 +51,11 @@ func main() {
 		}
 	}
 
-	var top fyne.CanvasObject = container.New(layout.NewCenterLayout(), appTitle)
+	var top fyne.CanvasObject = container.NewCenter(appTitle)
 	var left fyne.CanvasObject = sidePanel.GetContent()
 
-	appContent := container.New(
-		layout.NewBorderLayout(top, nil, left, nil),
-		top, left,
+	appContent := container.NewBorder(
+		top, nil, left, nil,
 		mainPanel,
 	)
 

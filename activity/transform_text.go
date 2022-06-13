@@ -5,7 +5,6 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -25,28 +24,20 @@ func (a *TransformTextActivity) GetContent() *fyne.Container {
 	textArea.SetMinRowsVisible(10)
 
 	output := container.NewScroll(transformedText)
-	output.SetMinSize(fyne.NewSize(300, 200))
+	output.SetMinSize(fyne.NewSize(100, 200))
 
-	return container.New(
-		layout.NewPaddedLayout(),
-		container.New(
-			layout.NewVBoxLayout(),
-			newRow(
-				widget.NewLabel("Input text"),
-				container.NewHScroll(textArea),
-			),
-			newRow(
-				widget.NewLabel("Output text"),
-				output,
-			),
-		),
-	)
-}
+	form := &widget.Form{
+		Items: []*widget.FormItem{
+			{
+				Text:   "Input",
+				Widget: textArea,
+			},
+			{
+				Text:   "Output",
+				Widget: output,
+			},
+		},
+	}
 
-func newRow(left fyne.CanvasObject, right fyne.CanvasObject) *fyne.Container {
-	return container.New(
-		layout.NewBorderLayout(nil, nil, left, nil),
-		left,
-		right,
-	)
+	return container.NewPadded(form)
 }
