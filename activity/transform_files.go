@@ -106,7 +106,7 @@ func (activity *TransformFilesActivity) openFolder(folderType FolderType) {
 
 func (activity *TransformFilesActivity) updateLabels() {
 	if activity.sourceFolder != nil {
-		sourceFiles := activity.sourceFolder.Path() + "\n\n"
+		sourceFilesText := activity.sourceFolder.Path() + "\n\n"
 
 		children, err := activity.sourceFolder.List()
 		if err != nil {
@@ -118,13 +118,13 @@ func (activity *TransformFilesActivity) updateLabels() {
 		validFilesCount := 0
 		for _, v := range children {
 			if v.Extension() == ".txt" {
-				sourceFiles += v.Name() + "\n"
+				sourceFilesText += v.Name() + "\n"
 				validFilesCount++
 			}
 		}
-		sourceFiles += strconv.Itoa(validFilesCount) + " files found !"
+		sourceFilesText += strconv.Itoa(validFilesCount) + " files found !"
 
-		activity.sourceFilesLabel.Text = sourceFiles
+		activity.sourceFilesLabel.Text = sourceFilesText
 		activity.sourceFilesLabel.Refresh()
 	}
 
