@@ -28,8 +28,12 @@ func (a *DefaultActivity) GetContent() *fyne.Container {
 func New(id string) Activity {
 
 	if id == "transform-text" {
-		return &TransformTextActivity{id}
+		return &TransformTextActivity{Id: id}
 	}
 
-	return &DefaultActivity{id}
+	if id == "transform-text-files" {
+		return &TransformFilesActivity{Id: id}
+	}
+
+	return &DefaultActivity{Id: id}
 }
