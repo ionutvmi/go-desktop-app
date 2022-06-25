@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"go-desktop-app/activity"
 	"go-desktop-app/sidebar"
 
@@ -43,7 +42,7 @@ func main() {
 	mainPanel := container.NewMax()
 
 	sidePanel.OnSelected = func(item sidebar.Element) {
-		fmt.Println("selected ", item.Id)
+		println("selected ", item.Id)
 
 		newAction := activity.New(item.Id)
 		mainPanel.Objects = []fyne.CanvasObject{
@@ -62,8 +61,3 @@ func main() {
 	w.SetContent(appContent)
 	w.ShowAndRun()
 }
-
-// cta := widget.NewButton("click me", func() {
-// 	menuItems = append(menuItems, "Something new")
-// 	list.Refresh()
-// })

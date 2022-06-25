@@ -1,7 +1,11 @@
 package activity
 
 import (
+	"bufio"
+	"os"
+	"path"
 	"strconv"
+	"strings"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -108,21 +112,16 @@ func (activity *TransformFilesActivity) updateLabels() {
 	if activity.sourceFolder != nil {
 		sourceFilesText := activity.sourceFolder.Path() + "\n\n"
 
-		children, err := activity.sourceFolder.List()
+		sourceFiles, err := activity.getValidFileNames()
+
 		if err != nil {
 			activity.sourceFilesLabel.Text = err.Error()
 			activity.sourceFilesLabel.Refresh()
 			return
 		}
 
-		validFilesCount := 0
-		for _, v := range children {
-			if v.Extension() == ".txt" {
-				sourceFilesText += v.Name() + "\n"
-				validFilesCount++
-			}
-		}
-		sourceFilesText += strconv.Itoa(validFilesCount) + " files found !"
+		sourceFilesText += strings.Join(sourceFiles, "\n") + "\n"
+		sourceFilesText += strconv.Itoa(len(sourceFiles)) + " files found !"
 
 		activity.sourceFilesLabel.Text = sourceFilesText
 		activity.sourceFilesLabel.Refresh()
@@ -134,6 +133,62 @@ func (activity *TransformFilesActivity) updateLabels() {
 	}
 }
 
-func (activity *TransformFilesActivity) processSelectedFiles() {
+func (activity *TransformFilesActivity) getValidFileNames() ([]string, error) {
+	result := []string{}
 
+	children, err := activity.sourceFolder.List()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, v := range children {
+		if v.Extension() == ".txt" {
+			result = append(result, v.Name())
+		}
+	}
+
+	return result, nil
+}
+
+func (activity *TransformFilesActivity) processSelectedFiles() {
+	sourceBasePath := activity.sourceFolder.Path()
+	destinationBasePath := activity.destinationFolder.Path()
+
+	files, err := activity.getValidFileNames()
+	if err != nil {
+		return
+	}
+
+	for _, name := range files {
+		sourceFullPath := path.Join(sourceBasePath, name)
+		sourceFile, err := os.OpenFile(sourceFullPath, os.O_RDONLY, os.ModePerm)
+
+		if err != nil {
+			println("Failed to open the file", err.Error())
+			return
+		}
+		defer sourceFile.Close()
+
+		destinationFullPath := path.Join(destinationBasePath, name)
+		destinationFile, err := os.OpenFile(destinationFullPath, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, os.ModePerm)
+
+		if err != nil {
+			println("Failed to open the file", err.Error())
+			return
+		}
+
+		defer destinationFile.Close()
+
+		sc := bufio.NewScanner(sourceFile)
+
+		for sc.Scan() {
+			line := sc.Text()
+			line = strings.ToUpper(line) + "\n"
+			destinationFile.Write([]byte(line))
+		}
+
+		println("Processed", name, "successfully !")
+	}
+
+	return
 }
