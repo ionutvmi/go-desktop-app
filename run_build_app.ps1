@@ -2,7 +2,7 @@
 if ($IsLinux) {
     # First time run
     # sudo apt-get install golang gcc libgl1-mesa-dev xorg-dev
-    go build -o dist/go-desktop-app
+    go build -gcflags='all=-N -l' -o dist/go-desktop-app
 }
 
 
@@ -14,6 +14,6 @@ if ($IsWindows) {
     C:\tools\msys64\usr\bin\env.exe `
         MSYSTEM=MINGW64 `
         CHERE_INVOKING=1 `
-        /usr/bin/bash -lc "go build -o dist/go-desktop-app.exe ."
+        /usr/bin/bash -lc "go build -gcflags='all=-N -l' -o dist/go-desktop-app.exe . "
 
 }

@@ -34,3 +34,12 @@ run_app.ps1
 ```
 
 
+## Debug from VSCode
+0. Ensure that you are using the latest version of GO and dlv
+    `go install github.com/go-delve/delve/cmd/dlv@latest`
+1. Open the MSYS2 terminal
+2. Launch vscode from that MSYS2 terminal with the `code` command
+3. Open the project folder and from Debug section run the `Launch Package` command
+
+Do not debug an app that was generated using go run.
+
