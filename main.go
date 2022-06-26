@@ -15,7 +15,7 @@ func main() {
 
 	// a.Settings().SetTheme(theme.DarkTheme())
 
-	w := a.NewWindow("Hello World")
+	w := a.NewWindow("Golang Utilities")
 	w.Resize(fyne.NewSize(600, 400))
 
 	appTitle := widget.NewLabel("Golang Utilities")

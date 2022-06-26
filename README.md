@@ -43,3 +43,7 @@ run_app.ps1
 
 Do not debug an app that was generated using go run.
 
+Alternatively you can use the `.\run_build_app.ps1 open` command.
+It will build the executable file with the debug information included.
+At any point in time you can attach to the running process.
+

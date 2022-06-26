@@ -151,6 +151,10 @@ func (activity *TransformFilesActivity) getValidFileNames() ([]string, error) {
 }
 
 func (activity *TransformFilesActivity) processSelectedFiles() {
+	if activity.sourceFolder == nil || activity.destinationFolder == nil {
+		return
+	}
+
 	sourceBasePath := activity.sourceFolder.Path()
 	destinationBasePath := activity.destinationFolder.Path()
 

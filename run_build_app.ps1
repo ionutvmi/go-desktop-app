@@ -16,4 +16,7 @@ if ($IsWindows) {
         CHERE_INVOKING=1 `
         /usr/bin/bash -lc "go build -gcflags='all=-N -l' -o dist/go-desktop-app.exe . "
 
+    if ($args[0] -eq 'open') {
+        dist/go-desktop-app.exe
+    }
 }
