@@ -47,15 +47,27 @@ func (activity *ImagesActivity) GetContent() *fyne.Container {
 		fyne.NewSize(90, 90),
 	)
 
+	sourceLog := container.NewScroll(
+		activity.sourceFilesLabel,
+	)
+
+	sourceLog.SetMinSize(fyne.NewSize(100, 80))
+
+	previewScroll := container.NewScroll(
+		activity.imagesPreview,
+	)
+
+	previewScroll.SetMinSize(fyne.NewSize(100, 120))
+
 	form := &widget.Form{
 		Items: []*widget.FormItem{
 			{
 				Text:   "Source folder",
-				Widget: activity.sourceFilesLabel,
+				Widget: sourceLog,
 			},
 			{
 				Text:   "",
-				Widget: activity.imagesPreview,
+				Widget: previewScroll,
 			},
 			{
 				Text: "",
@@ -117,7 +129,9 @@ func (activity *ImagesActivity) openFolder(folderType FolderType) {
 			activity.sourceFolder = list
 			activity.log("Selected source folder %s", list.Path())
 
-			activity.updatePreviewImages()
+			go func() {
+				activity.updatePreviewImages()
+			}()
 		} else if folderType == FOLDER_DESTINATION {
 			activity.destinationFolder = list
 			activity.log("Selected destination folder %s", list.Path())
@@ -128,7 +142,6 @@ func (activity *ImagesActivity) openFolder(folderType FolderType) {
 }
 
 func (activity *ImagesActivity) updatePreviewImages() {
-
 	sourceBasePath := activity.sourceFolder.Path()
 
 	files, err := activity.getValidFileNames()
