@@ -2,10 +2,12 @@ package activity
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"path"
 	"strconv"
 	"strings"
+	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -35,6 +37,9 @@ func (activity *TransformFilesActivity) GetContent() *fyne.Container {
 	activity.sourceFilesLabel = widget.NewLabel("0 files found")
 	activity.destinationLabel = widget.NewLabel("")
 	activity.resultLabel = widget.NewLabel("")
+
+	resultLog := container.NewScroll(activity.resultLabel)
+	resultLog.SetMinSize(fyne.NewSize(100, 200))
 
 	form := &widget.Form{
 		Items: []*widget.FormItem{
@@ -68,7 +73,7 @@ func (activity *TransformFilesActivity) GetContent() *fyne.Container {
 			},
 			{
 				Text:   "Result log",
-				Widget: activity.resultLabel,
+				Widget: resultLog,
 			},
 		},
 	}
@@ -100,8 +105,10 @@ func (activity *TransformFilesActivity) openFolder(folderType FolderType) {
 
 		if folderType == FOLDER_SOURCE {
 			activity.sourceFolder = list
+			activity.log("Selected source folder %s", list.Path())
 		} else if folderType == FOLDER_DESTINATION {
 			activity.destinationFolder = list
+			activity.log("Selected destination folder %s", list.Path())
 		}
 
 		activity.updateLabels()
@@ -150,8 +157,20 @@ func (activity *TransformFilesActivity) getValidFileNames() ([]string, error) {
 	return result, nil
 }
 
+func (activity *TransformFilesActivity) log(msg string, params ...interface{}) {
+	currentTime := time.Now()
+	timestamp := currentTime.Format("2006-Jan-02 15:04:05")
+
+	msg = fmt.Sprintf(msg, params...)
+	msg = fmt.Sprintf("[%s] - %s", timestamp, msg)
+
+	activity.resultLabel.Text = msg + "\n" + activity.resultLabel.Text
+	activity.resultLabel.Refresh()
+}
+
 func (activity *TransformFilesActivity) processSelectedFiles() {
 	if activity.sourceFolder == nil || activity.destinationFolder == nil {
+		activity.log("Missing source or destination folder")
 		return
 	}
 
@@ -168,7 +187,7 @@ func (activity *TransformFilesActivity) processSelectedFiles() {
 		sourceFile, err := os.OpenFile(sourceFullPath, os.O_RDONLY, os.ModePerm)
 
 		if err != nil {
-			println("Failed to open the file", err.Error())
+			activity.log("Failed to open the file", err.Error())
 			return
 		}
 		defer sourceFile.Close()
@@ -177,7 +196,7 @@ func (activity *TransformFilesActivity) processSelectedFiles() {
 		destinationFile, err := os.OpenFile(destinationFullPath, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, os.ModePerm)
 
 		if err != nil {
-			println("Failed to open the file", err.Error())
+			activity.log("Failed to open the file", err.Error())
 			return
 		}
 
@@ -191,7 +210,7 @@ func (activity *TransformFilesActivity) processSelectedFiles() {
 			destinationFile.Write([]byte(line))
 		}
 
-		println("Processed", name, "successfully !")
+		activity.log("Processed %s successfully !", name)
 	}
 
 	return
