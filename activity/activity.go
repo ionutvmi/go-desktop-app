@@ -46,5 +46,9 @@ func New(id string) Activity {
 		return NewTransformFilesActivity(id)
 	}
 
+	if id == "transform-images" {
+		return NewImagesActivity(id)
+	}
+
 	return &DefaultActivity{Id: id}
 }
