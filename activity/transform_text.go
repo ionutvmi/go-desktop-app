@@ -10,9 +10,14 @@ import (
 
 type TransformTextActivity struct {
 	Id string
+
+	textArea        *widget.Entry
+	transformedText *widget.Label
 }
 
-func (a *TransformTextActivity) GetContent() *fyne.Container {
+func NewTransformTextActivity(id string) *TransformTextActivity {
+	activity := &TransformTextActivity{Id: id}
+
 	textArea := widget.NewMultiLineEntry()
 	transformedText := widget.NewLabel("")
 
@@ -23,14 +28,21 @@ func (a *TransformTextActivity) GetContent() *fyne.Container {
 	textArea.PlaceHolder = "type something in here"
 	textArea.SetMinRowsVisible(10)
 
-	output := container.NewScroll(transformedText)
+	activity.textArea = textArea
+	activity.transformedText = transformedText
+	return activity
+}
+
+func (activity *TransformTextActivity) GetContent() *fyne.Container {
+
+	output := container.NewScroll(activity.transformedText)
 	output.SetMinSize(fyne.NewSize(100, 200))
 
 	form := &widget.Form{
 		Items: []*widget.FormItem{
 			{
 				Text:   "Input",
-				Widget: textArea,
+				Widget: activity.textArea,
 			},
 			{
 				Text:   "Output",

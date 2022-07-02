@@ -33,11 +33,17 @@ const (
 	FOLDER_DESTINATION
 )
 
-func (activity *TransformFilesActivity) GetContent() *fyne.Container {
+func NewTransformFilesActivity(id string) *TransformFilesActivity {
+	activity := &TransformFilesActivity{Id: id}
+
 	activity.sourceFilesLabel = widget.NewLabel("0 files found")
 	activity.destinationLabel = widget.NewLabel("")
 	activity.resultLabel = widget.NewLabel("")
 
+	return activity
+}
+
+func (activity *TransformFilesActivity) GetContent() *fyne.Container {
 	resultLog := container.NewScroll(activity.resultLabel)
 	resultLog.SetMinSize(fyne.NewSize(100, 200))
 

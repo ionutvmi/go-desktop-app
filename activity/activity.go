@@ -17,6 +17,8 @@ type DefaultActivity struct {
 	Id string
 }
 
+var activityCache = map[string]Activity{}
+
 func (a *DefaultActivity) GetContent() *fyne.Container {
 	mainContent := canvas.NewText(
 		a.Id+" is not implemented yet !",
@@ -27,12 +29,25 @@ func (a *DefaultActivity) GetContent() *fyne.Container {
 
 func New(id string) Activity {
 
+	savedActivity, ok := activityCache[id]
+
+	if ok {
+		return savedActivity
+	}
+
+	var newActivity Activity
+
 	if id == "transform-text" {
-		return &TransformTextActivity{Id: id}
+		newActivity = NewTransformTextActivity(id)
 	}
 
 	if id == "transform-text-files" {
-		return &TransformFilesActivity{Id: id}
+		newActivity = NewTransformFilesActivity(id)
+	}
+
+	if newActivity != nil {
+		activityCache[id] = newActivity
+		return newActivity
 	}
 
 	return &DefaultActivity{Id: id}
