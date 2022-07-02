@@ -26,28 +26,24 @@ func (a *DefaultActivity) GetContent() *fyne.Container {
 	)
 	return container.New(layout.NewVBoxLayout(), mainContent)
 }
-
-func New(id string) Activity {
-
+func CachedOrNew(id string) Activity {
 	savedActivity, ok := activityCache[id]
 
 	if ok {
 		return savedActivity
 	}
 
-	var newActivity Activity
+	activityCache[id] = New(id)
+	return activityCache[id]
+}
 
+func New(id string) Activity {
 	if id == "transform-text" {
-		newActivity = NewTransformTextActivity(id)
+		return NewTransformTextActivity(id)
 	}
 
 	if id == "transform-text-files" {
-		newActivity = NewTransformFilesActivity(id)
-	}
-
-	if newActivity != nil {
-		activityCache[id] = newActivity
-		return newActivity
+		return NewTransformFilesActivity(id)
 	}
 
 	return &DefaultActivity{Id: id}

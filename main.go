@@ -44,7 +44,7 @@ func main() {
 	sidePanel.OnSelected = func(item sidebar.Element) {
 		println("selected ", item.Id)
 
-		newAction := activity.New(item.Id)
+		newAction := activity.CachedOrNew(item.Id)
 		mainPanel.Objects = []fyne.CanvasObject{
 			newAction.GetContent(),
 		}
