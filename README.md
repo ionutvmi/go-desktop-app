@@ -30,7 +30,7 @@ export PATH=/mingw64/bin:/usr/local/bin:/usr/bin:/bin:/c/Windows/System32:/c/Win
 Once all the tools are installed you can run the application with:
 ```bash
 # In powershell
-run_app.ps1
+run_build_app.ps1 open
 ```
 
 
