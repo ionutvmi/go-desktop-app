@@ -1,8 +1,12 @@
 
 if ($IsLinux) {
+    Push-Location ./app
+
     # First time run
     # sudo apt-get install golang gcc libgl1-mesa-dev xorg-dev
-    go build -gcflags='all=-N -l' -o dist/go-desktop-app
+    go build -gcflags='all=-N -l' -o ../dist/go-desktop-app .
+
+    Pop-Location
 }
 
 
